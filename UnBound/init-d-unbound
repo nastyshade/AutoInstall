@@ -1,0 +1,78 @@
+#!/bin/sh
+#
+# unbound This shell script takes care of starting and stopping
+# unbound (DNS server).
+
+exec="/usr/local/sbin/unbound"
+prog="unbound"
+config="/var/unbound/unbound.conf"
+pidfile="/var/run/unbound.pid"
+rootdir="/var/unbound"
+
+case "$1" in
+start)
+[ -x $exec ] || exit 5
+[ -f $config ] || exit 6
+echo -n $"Starting $prog: "
+
+# setup root jail
+if [ -s /etc/localtime ]; then
+[ -d ${rootdir}/etc ] || mkdir -p ${rootdir}/etc ;
+if [ ! -e ${rootdir}/etc/localtime ] || /usr/bin/cmp -s /etc/localtime ${rootdir}/etc/localtime; then
+cp -fp /etc/localtime ${rootdir}/etc/localtime
+fi;
+fi;
+if [ -s /etc/resolv.conf ]; then
+[ -d ${rootdir}/etc ] || mkdir -p ${rootdir}/etc ;
+if [ ! -e ${rootdir}/etc/resolv.conf ] || /usr/bin/cmp -s /etc/resolv.conf ${rootdir}/etc/resolv.conf; then
+cp -fp /etc/resolv.conf ${rootdir}/etc/resolv.conf
+fi;
+fi;
+if ! egrep -q '^/[^[:space:]]+[[:space:]]+'${rootdir}'/dev/log' /proc/mounts; then
+[ -d ${rootdir}/dev ] || mkdir -p ${rootdir}/dev ;
+[ -e ${rootdir}/dev/log ] || touch ${rootdir}/dev/log
+mount --bind -n /dev/log ${rootdir}/dev/log >/dev/null 2>&1;
+fi;
+if ! egrep -q '^/[^[:space:]]+[[:space:]]+'${rootdir}'/dev/random' /proc/mounts; then
+[ -d ${rootdir}/dev ] || mkdir -p ${rootdir}/dev ;
+[ -e ${rootdir}/dev/random ] || touch ${rootdir}/dev/random
+mount --bind -n /dev/random ${rootdir}/dev/random >/dev/null 2>&1;
+fi;
+
+# if not running, start it up here
+start-stop-daemon --start --quiet --pidfile $pidfile --exec $exec -- -c $config
+echo
+;;
+
+stop)
+echo -n $"Stopping $prog: "
+start-stop-daemon --stop --quiet --oknodo --pidfile $pidfile
+echo
+if egrep -q '^/[^[:space:]]+[[:space:]]+'${rootdir}'/dev/log' /proc/mounts; then
+umount ${rootdir}/dev/log >/dev/null 2>&1
+fi;
+if egrep -q '^/[^[:space:]]+[[:space:]]+'${rootdir}'/dev/random' /proc/mounts; then
+umount ${rootdir}/dev/random >/dev/null 2>&1
+fi;
+;;
+
+restart)
+start-stop-daemon --stop --quiet --oknodo --pidfile $pidfile
+start-stop-daemon --start --quiet --pidfile $pidfile --exec $exec -- -c $config
+;;
+
+reload)
+start-stop-daemon --stop --signal 1 --quiet --oknodo --pidfile $pidfile --exec $exec
+;;
+
+force_reload)
+start-stop-daemon --stop --signal 1 --quiet --oknodo --pidfile $pidfile --exec $exec
+;;
+
+*)
+echo $"Usage: $0 {start|stop|restart|reload|force-reload}"
+exit 2
+;;
+esac
+
+exit 0
