@@ -28,7 +28,7 @@ stop_spinner $?
 
 echo "# Redemarrage du service Squid" > ${RAPPORT} 2>&1
 start_spinner "# Redemarrage du service Squid"
-restart squid3 >> ${RAPPORT} 2>&1
+service squid3 restart >> ${RAPPORT} 2>&1
 stop_spinner $?
 
 echo ""
