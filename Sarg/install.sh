@@ -8,7 +8,8 @@ echo ""
 
 echo "# Installation des librairies requises" > ${RAPPORT} 2>&1
 start_spinner "# Installation des librairies requises"
-apt-get update && apt-get install sarg -y --force-yes >> ${RAPPORT} 2>&1
+apt-get update >> ${RAPPORT} 2>&1
+apt-get install sarg -y --force-yes >> ${RAPPORT} 2>&1
 stop_spinner $?
 
 echo "# Configuration de Sarg" > ${RAPPORT} 2>&1
