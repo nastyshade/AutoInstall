@@ -15,12 +15,13 @@ stop_spinner $?
 echo "# Configuration de Squid" > ${RAPPORT} 2>&1
 start_spinner "# Configuration de Squid"
 cd /etc/squid3 >> ${RAPPORT} 2>&1
-touch /etc/squid3/censure.txt >> ${RAPPORT} 2>&1
+#touch /etc/squid3/censure.txt >> ${RAPPORT} 2>&1
 cp squid.conf squid.conf.bak >> ${RAPPORT} 2>&1
 cat squid.conf.bak | egrep -v -e '^[[:blank:]]*#|^$' > squid.conf >> ${RAPPORT} 2>&1
 sed -i "1iacl localnet src ${PLAGE_IP}" squid.conf >> ${RAPPORT} 2>&1
-sed -i "/acl CONNECT method CONNECT/ a\acl censure url_regex -i \"/etc/squid3/censure.txt\"" squid.conf >> ${RAPPORT} 2>&1
-sed -i "/http_access deny manager/ a\http_access deny censure" squid.conf >> ${RAPPORT} 2>&1
+sed -i "/http_access allow localhost/ a\http_access allow localnet" squid.conf >> ${RAPPORT} 2>&1
+#sed -i "/acl CONNECT method CONNECT/ a\acl censure url_regex -i \"/etc/squid3/censure.txt\"" squid.conf >> ${RAPPORT} 2>&1
+#sed -i "/http_access deny manager/ a\http_access deny censure" squid.conf >> ${RAPPORT} 2>&1
 echo "visible_hostname $(hostname)" >> squid.conf >> ${RAPPORT} 2>&1
 echo "cache_mgr ${MAIL}" >> squid.conf >> ${RAPPORT} 2>&1
 stop_spinner $?
