@@ -33,7 +33,7 @@ echo "30 02 1 * * root sarg-reports monthly" >> /etc/crontab
 stop_spinner $?
 
 echo ""
-echo -e "${JAUNE}Installation du service Squid finie"
+echo -e "${JAUNE}Installation du service Sarg finie"
 echo -e "Log de l'installation: ${RAPPORT}"
 echo -e ""
 echo -e "Appuyer sur Entrée pour quitter${NEUTRE}"
