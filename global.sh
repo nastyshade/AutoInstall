@@ -13,4 +13,4 @@ PLAGE_IP="192.168.0.0/24"
 MAIL="login@provider.com"
 
 # SARG
-SARG_WWW="/var/www/html/sarg/"
+SARG_WWW="/var/www/html/sarg"
