@@ -9,7 +9,7 @@ echo ""
 echo "# Installation des librairies requises" > ${RAPPORT} 2>&1
 start_spinner "# Installation des librairies requises"
 apt-get update >> ${RAPPORT} 2>&1
-apt-get install squid3 sarg -y --force-yes >> ${RAPPORT} 2>&1
+apt-get install squid3 -y --force-yes >> ${RAPPORT} 2>&1
 stop_spinner $?
 
 echo "# Configuration de Squid" > ${RAPPORT} 2>&1
@@ -27,7 +27,7 @@ stop_spinner $?
 
 echo "# Redemarrage du service Squid" > ${RAPPORT} 2>&1
 start_spinner "# Redemarrage du service Squid"
-/etc/init.d/squid reload >> ${RAPPORT} 2>&1
+restart squid3 >> ${RAPPORT} 2>&1
 stop_spinner $?
 
 echo ""
