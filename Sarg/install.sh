@@ -19,7 +19,7 @@ cp /etc/sarg/sarg.conf /etc/sarg/sarg.conf.bak >> ${RAPPORT} 2>&1
 cp /etc/sarg/sarg-reports.conf /etc/sarg/sarg-reports.conf.bak >> ${RAPPORT} 2>&1
 sed -i 's/access_log \/var\/log\/squid\/access.log/access_log\/var\/log\/squid3\/access.log/' /etc/sarg/sarg.conf >>${RAPPORT} 2>&1
 sed -i 's/#graphs yes/graphs yes/' /etc/sarg/sarg.conf >> ${RAPPORT} 2>&1
-sed -i 's/#graph_days_bytes_bar_color orange/graph_days_bytes_bar_color orange/' /etc/sarg/sarg.conf >> ${RAPPORT} 2$
+sed -i 's/#graph_days_bytes_bar_color orange/graph_days_bytes_bar_color orange/' /etc/sarg/sarg.conf >> ${RAPPORT} 2>&1
 sed -i 's/charset Latin1/charset UTF-8/' /etc/sarg/sarg.conf >> ${RAPPORT} 2>&1
 sed -i "s/HTMLOUT=\/var\/lib\/sarg/HTMLOUT=${SARG_WWW//\//\\/}/" /etc/sarg/sarg-reports.conf >> ${RAPPORT} 2>&1
 stop_spinner $?
